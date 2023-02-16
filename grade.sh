@@ -22,12 +22,23 @@ cd student-submission
 
 javac -cp ".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" *.java
 
-if [[ $? -ne 0 ]]
+if [[ $lc > 0 ]]
 then
-    exit "Compile failed"
+    exit "ListExamples.java failed to compile"
 fi
 
 echo "Compile Successful"
 
-java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples
+java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples > run-output.txt
     
+grep "testMergeRightEnd" run-output.txt > grep-results.txt
+wc -l grep-results.txt > line-total.txt
+lc=$(cat line-total.txt)
+
+if [[ $lc > 0 ]]
+then
+    echo "Tester 'testMergeRightEnd' failed"
+    exit "Failed to run successfully"
+fi
+
+echo "All tests passed"
